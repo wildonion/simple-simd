@@ -32,7 +32,8 @@ fn main() {
     
     
     let multiple = |chunk: u8| {
-        chunk * 2
+        println!(":) Doing some heavy operation on chunk .... {:?}", chunk);
+        chunk
     };
 
     
