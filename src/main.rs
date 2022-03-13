@@ -31,16 +31,13 @@ fn main() {
     
     
     
-    let func = |chunk: u8| {
-        // doing some ops on incoming chunk
-        // ...
-        chunk
-
+    let multiple = |chunk: u8| {
+        chunk * 2
     };
 
     
 
-    let result = utils::simd(3985935, func);
+    let result = utils::simd(3985935, multiple);
     println!("the result is {:?}", result);
 
 
