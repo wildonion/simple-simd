@@ -59,4 +59,4 @@ INFO  utils > chunk 0 in utf8 format -> [0] at time 2022-03-14T18:50:02.53440950
 ```
 
 
-**NOTE** - Due to the time takes to send and receive each chunks inside threads through the `mpsc` channel asyncly the result of each method might be different on each run.
+**NOTE** - Due to the time takes to send and receive each chunks inside threads through the `mpsc` channel asyncly the result of each method might be different on each run, but here at first run both input and result got into an equality condition.
