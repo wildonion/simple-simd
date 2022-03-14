@@ -1,5 +1,9 @@
 
-# Simple Implementation of SIMD
+# Run 
+
+```console 
+$ cargo run
+```
 
 [Question](https://quera.org/problemset/113613/)
 
