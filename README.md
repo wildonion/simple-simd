@@ -20,8 +20,8 @@ $ cargo run
 
 ## Sample Input
 
-* multiple closure
-* 3985935
+* _heavy_func_
+* _3985935_
 
 ## Sample Output
 
