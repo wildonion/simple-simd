@@ -15,11 +15,8 @@ use std::env;
 
 
 
-// NOTE - don't spawn an async task using tokio inside the rust native thread due to thread confliction nature
-// NOTE - don't use info!(), println!() and chrono inside the thread::spawn() and tokio::spawn() 
-//        cause the bytes order will get into a mess due to a time delay to spend inside 
-//        the current thread for logging the infos and times out to the console,
-//        use assert_eq!() instead.
+// NOTE - don't spawn an async task using tokio inside the rust native thread due to threads confliction nature
+
 
 
 
