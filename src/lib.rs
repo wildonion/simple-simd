@@ -45,20 +45,21 @@ pub async fn simd<F>(number: u32, ops: F) -> Result<u32, String> where F: Fn(u8)
 
     }
 
-        
+    
+    
     info!("collecting all chunks received from the receiver at time {:?}", chrono::Local::now().naive_local());
     let bytes: Vec<u8> = receiver.iter().take(threads).collect(); //-- collecting 4 packs of 8 bits to gather all incoming chunks from the channel
-    let boxed_slice = bytes.into_boxed_slice();
+    info!("collected bytes -> {:?} at time {:?}", bytes, chrono::Local::now().naive_local());
+    let boxed_slice = bytes.into_boxed_slice(); //-- converting the collected bytes into a Box slice or array of utf8 bytes
     let boxed_array: Box<[u8; 4]> = match boxed_slice.try_into() {
         Ok(arr) => arr,
-        Err(o) => {
-            return Err(format!("vector length must be 4 but it's {}", o.len()));
-        },
+        Err(o) => return Err(format!("vector length must be 4 but it's {}", o.len())),
     };
+    
+    
+    
     let result = *boxed_array; //-- dereferencing the box pointer to get the value inside of it 
     let final_res = u32::from_be_bytes(result); //-- will create a u32 number from 4 pack of 8 bits 
-
-
     Ok(final_res) //-- the final results might be different from the input due to the time takes to send the each chunks through the channel and receive them from the receiver thus the order of chunks will not be the same as the input
 
 }
@@ -69,8 +70,7 @@ pub async fn simd<F>(number: u32, ops: F) -> Result<u32, String> where F: Fn(u8)
 
 
 
-// ------------------------------ using mpsc job queue channel using tokio
-// https://github.com/tokio-rs/tokio/discussions/3858
+// ------------------------------ using mpsc job queue channel with tokio
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -90,7 +90,7 @@ pub async fn simd_tokio<F>(number: u32, ops: F) -> Result<u32, String> where F: 
         info!("chunk {:?} in utf8 format -> [{:?}] at time {:?}", index, big_end_bytes[index], chrono::Local::now().naive_local());
         let cloned_sender = sender.clone();
         let cloned_ops = ops.clone();
-        tokio::spawn(async move{ //-- spawning an async task inside the rust native thread in the background using tokio, it'll solve the task using green threads in the background
+        tokio::spawn(async move{ //-- spawning an async task in the background using tokio based on green threads feature in the background
             let new_chunk = cloned_ops(big_end_bytes[index]);
             info!("\tsender-channel---(chunk {:?})---receiver-channel at time {:?} ", index, chrono::Local::now().naive_local());
             cloned_sender.send(new_chunk).unwrap();
@@ -99,20 +99,21 @@ pub async fn simd_tokio<F>(number: u32, ops: F) -> Result<u32, String> where F: 
 
     }
 
-        
+
+    
     info!("collecting all chunks received from the receiver at time {:?}", chrono::Local::now().naive_local());
     let bytes: Vec<u8> = receiver.iter().take(threads).collect(); //-- collecting 4 packs of 8 bits to gather all incoming chunks from the channel
-    let boxed_slice = bytes.into_boxed_slice();
+    info!("collected bytes -> {:?} at time {:?}", bytes, chrono::Local::now().naive_local());
+    let boxed_slice = bytes.into_boxed_slice(); //-- converting the collected bytes into a Box slice or array of utf8 bytes
     let boxed_array: Box<[u8; 4]> = match boxed_slice.try_into() {
         Ok(arr) => arr,
-        Err(o) => {
-            return Err(format!("vector length must be 4 but it's {}", o.len()));
-        },
+        Err(o) => return Err(format!("vector length must be 4 but it's {}", o.len())),
     };
+
+
+
     let result = *boxed_array; //-- dereferencing the box pointer to get the value inside of it 
     let final_res = u32::from_be_bytes(result); //-- will create a u32 number from 4 pack of 8 bits 
-
-
     Ok(final_res) //-- the final results might be different from the input due to the time takes to send the each chunks through the channel and receive them from the receiver and caused by handling tokio tasks asyncly through its threads thus the order of chunks will not be the same as the input
 
 }
