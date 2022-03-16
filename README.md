@@ -60,6 +60,6 @@ INFO  utils > collected bytes -> [0, 60, 210, 15] at time 2022-03-16T15:50:58.92
 INFO  simd  > ::::: the result with tokio green threads is 3985935 - [it might be different from the input] - | cost : 11.9192
 ```
 
-## Concurrency Beautiy!
+## Concurrency Beauty!
 
 **NOTE** - Due to the time which takes to send and receive each chunks inside threads through the `mpsc` channel asyncly, the result of each method might be different on each run and it depends on the system, but here at first run both input and result got into an equality condition.
